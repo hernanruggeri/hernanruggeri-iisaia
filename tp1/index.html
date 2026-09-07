@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trabajo Práctico 1 · Registro de riego</title>
+  <style>
+    :root {
+      --background: #f1f5ef;
+      --surface: #ffffff;
+      --text: #1e2a22;
+      --muted: #637067;
+      --primary: #245b3a;
+      --primary-dark: #174329;
+      --secondary: #d9e4dc;
+      --border: #cbd7ce;
+      --success: #17643a;
+      --shadow: 0 18px 45px rgba(35, 70, 48, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: var(--background);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    main {
+      width: min(100%, 720px);
+      padding: 38px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--primary);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 5vw, 2.55rem);
+      line-height: 1.08;
+    }
+
+    .intro {
+      margin: 16px 0 28px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .volume-panel {
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fafcf9;
+      text-align: center;
+    }
+
+    .observation-panel {
+      margin-top: 18px;
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fafcf9;
+    }
+
+    .observation-panel h2 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .observation-instruction {
+      margin: 8px 0 16px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .observation-output {
+      min-height: 74px;
+      padding: 14px;
+      overflow-wrap: anywhere;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: #ffffff;
+      line-height: 1.5;
+    }
+
+    .observation-output.is-empty {
+      color: #8a958d;
+      font-style: italic;
+    }
+
+    .character-count {
+      margin: 6px 0 14px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-align: right;
+    }
+
+    .keyboard {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 7px;
+    }
+
+    .letter-key {
+      min-height: 42px;
+      border: 1px solid var(--border);
+      background: var(--secondary);
+      color: var(--text);
+    }
+
+    .editing-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .editing-controls button {
+      min-height: 44px;
+      background: #e8eee9;
+      color: var(--text);
+    }
+
+    .volume-label {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .volume-value {
+      margin: 8px 0 24px;
+      color: var(--primary-dark);
+      font-size: clamp(3rem, 12vw, 5rem);
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .volume-value span {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    button {
+      min-height: 54px;
+      border: 0;
+      border-radius: 11px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      transition: transform 120ms ease, background 120ms ease;
+    }
+
+    button:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    #subtract-button {
+      background: var(--secondary);
+      color: var(--text);
+    }
+
+    #add-button {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.42;
+    }
+
+    .help {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    #save-button {
+      width: 100%;
+      margin-top: 18px;
+      background: #17221b;
+      color: #ffffff;
+    }
+
+    #message {
+      min-height: 24px;
+      margin: 16px 0 0;
+      color: var(--success);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    @media (max-width: 520px) {
+      main {
+        padding: 26px 20px;
+      }
+
+      .volume-panel {
+        padding: 22px 16px;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .observation-panel {
+        padding: 22px 16px;
+      }
+
+      .keyboard {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Trabajo Práctico 1</p>
+    <h1>Registro de riego</h1>
+    <p class="intro">
+      Indicá el volumen estimado utilizado en cantidad de litros.<br>
+      No se puede escribir: debés construir el número combinando sumas de 3 litros y restas de 2 litros.
+    </p>
+
+    <section class="volume-panel" aria-labelledby="volume-heading">
+      <p class="volume-label" id="volume-heading">Volumen seleccionado</p>
+      <p class="volume-value" aria-live="polite">
+        <strong id="volume">0</strong> <span>litros</span>
+      </p>
+
+      <div class="controls">
+        <button id="subtract-button" type="button" disabled>Quitar 2 litros</button>
+        <button id="add-button" type="button">Agregar 3 litros</button>
+      </div>
+
+      <p class="help">
+        Debés combinar ambos botones hasta obtener la cantidad que querés registrar.
+      </p>
+    </section>
+
+    <section class="observation-panel" aria-labelledby="observation-heading">
+      <h2 id="observation-heading">Observación del riego</h2>
+      <p class="observation-instruction">
+        No se puede escribir directamente. Construí una observación de entre 8 y 40
+        caracteres con el teclado virtual.
+      </p>
+
+      <div
+        id="observation-output"
+        class="observation-output is-empty"
+        role="textbox"
+        aria-label="Observación construida"
+        aria-readonly="true"
+        aria-live="polite"
+      >La observación aparecerá acá.</div>
+      <p id="character-count" class="character-count">0 / 40 caracteres</p>
+
+      <div id="letter-keyboard" class="keyboard" aria-label="Teclado virtual"></div>
+
+      <div class="editing-controls">
+        <button id="space-button" type="button">Agregar espacio</button>
+        <button id="backspace-button" type="button">Borrar última letra</button>
+      </div>
+    </section>
+
+    <button id="save-button" type="button" disabled>Registrar riego</button>
+    <p id="message" role="status" aria-live="polite"></p>
+  </main>
+
+  <script>
+    const volumeElement = document.querySelector("#volume");
+    const addButton = document.querySelector("#add-button");
+    const subtractButton = document.querySelector("#subtract-button");
+    const saveButton = document.querySelector("#save-button");
+    const messageElement = document.querySelector("#message");
+    const observationOutput = document.querySelector("#observation-output");
+    const characterCount = document.querySelector("#character-count");
+    const letterKeyboard = document.querySelector("#letter-keyboard");
+    const spaceButton = document.querySelector("#space-button");
+    const backspaceButton = document.querySelector("#backspace-button");
+
+    let volume = 0;
+    let observation = "";
+    const minimumCharacters = 8;
+    const maximumCharacters = 40;
+    const letters = [..."ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"];
+
+    function isObservationValid() {
+      return observation.trim().length >= minimumCharacters;
+    }
+
+    function updateSaveState() {
+      saveButton.disabled = volume === 0 || !isObservationValid();
+    }
+
+    function renderObservation() {
+      const isEmpty = observation.length === 0;
+      observationOutput.textContent = isEmpty
+        ? "La observación aparecerá acá."
+        : observation;
+      observationOutput.classList.toggle("is-empty", isEmpty);
+      characterCount.textContent = `${observation.length} / ${maximumCharacters} caracteres · mínimo ${minimumCharacters}`;
+      spaceButton.disabled = isEmpty || observation.endsWith(" ") || observation.length >= maximumCharacters;
+      backspaceButton.disabled = isEmpty;
+      updateSaveState();
+      messageElement.textContent = "";
+    }
+
+    function addCharacter(character, mixKeyboard = false) {
+      if (observation.length < maximumCharacters) {
+        observation += character;
+        renderObservation();
+
+        if (mixKeyboard) {
+          renderKeyboard();
+        }
+      }
+    }
+
+    function shuffledLetters() {
+      const shuffled = [...letters];
+
+      for (let index = shuffled.length - 1; index > 0; index -= 1) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
+      }
+
+      return shuffled;
+    }
+
+    function renderKeyboard() {
+      letterKeyboard.replaceChildren();
+
+      shuffledLetters().forEach((letter) => {
+        const key = document.createElement("button");
+        key.type = "button";
+        key.className = "letter-key";
+        key.textContent = letter;
+        key.setAttribute("aria-label", `Agregar letra ${letter}`);
+        key.addEventListener("click", () => addCharacter(letter, true));
+        letterKeyboard.appendChild(key);
+      });
+    }
+
+    function render() {
+      volumeElement.textContent = volume;
+      subtractButton.disabled = volume < 2;
+      updateSaveState();
+      messageElement.textContent = "";
+    }
+
+    addButton.addEventListener("click", () => {
+      volume += 3;
+      render();
+    });
+
+    subtractButton.addEventListener("click", () => {
+      if (volume >= 2) {
+        volume -= 2;
+        render();
+      }
+    });
+
+    saveButton.addEventListener("click", () => {
+      const volumeUnit = volume === 1 ? "litro" : "litros";
+      messageElement.textContent = `Riego registrado: ${volume} ${volumeUnit}. Observación: "${observation.trim()}".`;
+    });
+
+    spaceButton.addEventListener("click", () => addCharacter(" "));
+
+    backspaceButton.addEventListener("click", () => {
+      observation = observation.slice(0, -1);
+      renderObservation();
+    });
+
+    renderKeyboard();
+    renderObservation();
+    render();
+  </script>
+</body>
+</html>
