@@ -1,4 +1,4 @@
-\# TP1 — Registro de riego
+# TP1 — Registro de riego
 
 
 
@@ -6,7 +6,7 @@
 
 
 
-\## Descripción
+## Descripción
 
 
 
@@ -17,8 +17,41 @@ Este trabajo presenta una aplicación web para registrar un riego manual en una 
 La aplicación implementa una interfaz deliberadamente incómoda: permite completar la tarea, pero evita los mecanismos habituales de ingreso y requiere que la persona se detenga a pensar antes de cada acción.
 
 
+## Qué me propuse construir
 
-\## Cómo se materializa la incomodidad
+Me propuse construir una interfaz deliberadamente incómoda para registrar un riego manual. La tarea debía poder completarse correctamente, pero evitando los mecanismos habituales y rápidos para ingresar un número y escribir una observación.
+
+
+## Decisiones que tomé
+
+Frente a alternativas más convencionales, decidí:
+
+- utilizar el registro de riego como una situación cotidiana y reconocible;
+- reemplazar el ingreso directo del volumen por una combinación de sumas de 3 litros y restas de 2 litros;
+- impedir que las operaciones produzcan valores negativos;
+- reemplazar el teclado físico por un teclado virtual con las 27 letras del alfabeto español, incluida la Ñ;
+- reordenar las letras después de cada selección;
+- mantener fijos los controles para agregar espacios y borrar;
+- establecer una observación de entre 8 y 40 caracteres;
+- no anticipar en la interfaz que las letras cambiarán de posición;
+- distinguir correctamente entre “1 litro” y “litros” en el mensaje de confirmación.
+
+Estas decisiones buscaron producir una experiencia incómoda por diseño, sin impedir que el registro pudiera completarse correctamente.
+
+## Qué ajusté durante las iteraciones
+
+La primera versión concentraba la incomodidad en la selección del volumen. Para extender esa dificultad al ingreso de texto, incorporé una observación construida mediante un teclado virtual.
+
+El teclado virtual inicialmente permitía localizar las letras siempre en las mismas posiciones. Para evitar que su disposición pudiera memorizarse rápidamente, se modificó para reordenar las letras después de cada selección.
+
+También se revisaron las instrucciones visibles. Se decidió no anticipar que las letras cambiarían de posición, dejando esa explicación para este informe y permitiendo que el comportamiento se descubra durante el uso.
+
+Finalmente, se ajustó el mensaje de confirmación para distinguir correctamente entre “1 litro” y “litros”.
+
+El proceso de construcción se desarrolló mediante iteraciones sucesivas, documentadas en `prompts.md`. El archivo `index.html` reúne la versión final del artefacto, con todos los ajustes integrados.
+
+
+## Cómo se materializa la incomodidad
 
 
 
@@ -26,7 +59,7 @@ La aplicación es funcional: permite registrar un riego y una observación. Sin 
 
 
 
-\### Volumen de riego
+### Volumen de riego
 
 
 
@@ -48,7 +81,7 @@ Además, no se permiten valores negativos: el botón para quitar 2 litros perman
 
 
 
-\### Observación del riego
+### Observación del riego
 
 
 
@@ -68,7 +101,7 @@ En ambos casos, la incomodidad no impide completar la tarea: introduce fricción
 
 
 
-\## Funcionamiento
+## Funcionamiento
 
 
 
@@ -86,7 +119,7 @@ Al registrar un valor válido, la aplicación muestra un mensaje de confirmació
 
 
 
-\## Diseño y accesibilidad
+## Diseño y accesibilidad
 
 
 
@@ -94,7 +127,7 @@ La interfaz utiliza una paleta asociada a una huerta, con el volumen como elemen
 
 
 
-\## Tecnologías
+## Tecnologías
 
 
 
@@ -114,7 +147,7 @@ No utiliza frameworks, bibliotecas ni dependencias externas.
 
 
 
-\## Archivos
+## Archivos
 
 
 
@@ -126,7 +159,7 @@ No utiliza frameworks, bibliotecas ni dependencias externas.
 
 
 
-\## Ejecución
+## Ejecución
 
 
 
@@ -134,7 +167,7 @@ Para utilizar la aplicación, se debe abrir el archivo `index.html` en un navega
 
 
 
-\## Prueba rápida
+## Prueba rápida
 
 
 
