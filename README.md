@@ -20,6 +20,8 @@ Este repositorio reúne las entregas realizadas durante el curso y se actualizar
 
 - [TP1 — Registro de riego](tp1/): interfaz deliberadamente incómoda para registrar un riego manual.
 
+- [TP2 — API Agroriego](tp2/): diseño y documentación del contrato OpenAPI para consultar sectores y registrar riegos manuales.
+
 
 
 Las siguientes entregas se incorporarán progresivamente en este mismo repositorio.
