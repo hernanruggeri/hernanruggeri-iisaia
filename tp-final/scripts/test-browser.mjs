@@ -1,0 +1,83 @@
+import assert from 'node:assert/strict';
+import { chromium } from 'playwright';
+import { mkdtemp, mkdir, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { createDemoServer } from '../server/demo.js';
+import { openDatabase } from '../server/database.js';
+
+const temp = await mkdtemp(join(tmpdir(), 'agroriego-browser-'));
+const server = createDemoServer({ store: openDatabase(join(temp, 'browser.sqlite')) });
+await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+const base = `http://127.0.0.1:${server.address().port}`;
+let browser;
+try {
+  browser = await chromium.launch({ headless: true,
+    ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ? {executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE} : {}) });
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto(`${base}/hr-agroriego-iot/#riego`);
+  const save = page.getByRole('button', { name: 'Guardar registro', exact:true });
+  await save.waitFor();
+  await page.waitForFunction(() => document.querySelector('button[type="submit"]')?.disabled === false);
+  await page.getByLabel('Sector de riego', { exact: true }).selectOption('s2');
+  await page.getByLabel('Duración (min)', { exact:true }).fill('9');
+  await page.getByLabel('Caudal medio (L/min)', { exact:true }).fill('0.8');
+  assert.equal(await page.getByLabel('Volumen estimado (L)', { exact:true }).inputValue(), '7.2');
+  await page.getByLabel('Observaciones', {exact:true}).fill('Prueba de navegador: 7,2 litros');
+  await save.click();
+  await page.getByText('Registro guardado en SQLite mediante la API REST (201).', {exact:true}).waitFor();
+  let row = page.locator('tbody tr').filter({hasText:'Prueba de navegador: 7,2 litros'});
+  assert.equal(await row.count(), 1);
+  await page.reload();
+  await row.waitFor();
+  assert.match(await row.textContent(), /7,20 L/);
+  console.log('PASS navegador: registro, cálculo de 7,2 L y recarga desde SQLite');
+  await page.getByLabel('Filtrar sector de riegos').selectOption('s1');
+  assert.equal(await row.count(), 0);
+  await page.getByLabel('Filtrar sector de riegos').selectOption('s2');
+  assert.equal(await row.count(), 1);
+  await mkdir('docs/capturas', {recursive:true});
+  await page.screenshot({path:'docs/capturas/registro-desktop.png', fullPage:true});
+  // Real history filtering differs from the fixed simulated chart.
+  await page.getByRole('button',{name:'Historial', exact:true}).click();
+  await page.getByLabel('Período de riegos').selectOption('24h');
+  await row.waitFor();
+  await page.getByLabel('Sector', {exact:true}).selectOption('s1');
+  assert.equal(await row.count(),0);
+  console.log('PASS navegador: filtros de sector y período');
+  await page.getByRole('button',{name:'Riego', exact:true}).click();
+  row = page.locator('tbody tr').filter({hasText:'Prueba de navegador: 7,2 litros'});
+  // Cancel leaves data intact, confirm removes it.
+  page.once('dialog', dialog => dialog.dismiss());
+  await row.getByRole('button',{name:'Eliminar', exact:true}).click();
+  assert.equal(await row.count(),1);
+  page.once('dialog', dialog => dialog.accept());
+  await row.getByRole('button',{name:'Eliminar', exact:true}).click();
+  await page.waitForFunction(() => !document.body.textContent.includes('Prueba de navegador: 7,2 litros'));
+  await page.reload();
+  await page.waitForFunction(() => document.querySelector('button[type="submit"]')?.disabled === false);
+  assert.equal(await row.count(),0);
+  console.log('PASS navegador: cancelación y eliminación confirmada persistente');
+  await page.route('**/api/**', route => route.abort());
+  await page.reload();
+  await page.getByText('Reintentar conexión', {exact:true}).waitFor();
+  assert.equal(await save.isDisabled(),true);
+  assert.equal(await page.locator('tbody tr').count(),0);
+  await page.screenshot({path:'docs/capturas/api-no-disponible.png',fullPage:true});
+  await page.unroute('**/api/**');
+  await page.getByRole('button',{name:'Reintentar conexión',exact:true}).click();
+  await page.waitForFunction(() => document.querySelector('button[type="submit"]')?.disabled === false);
+  console.log('PASS navegador: API no disponible, escritura bloqueada y reconexión');
+  await page.setViewportSize({width:390,height:844});
+  await page.waitForFunction(() => document.querySelector('.sidebar').getBoundingClientRect().right <= 0);
+  await page.screenshot({path:'docs/capturas/registro-mobile.png',fullPage:true});
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), 'Overflow horizontal de página móvil');
+  assert.deepEqual(errors,[],'Errores JS no esperados');
+  console.log('PASS navegador: móvil sin desborde de página; sin errores JavaScript');
+} finally {
+  if (browser) await browser.close();
+  await new Promise(resolve => server.close(resolve));
+  await rm(temp,{recursive:true,force:true});
+}

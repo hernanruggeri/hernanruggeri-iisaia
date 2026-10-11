@@ -1,0 +1,267 @@
+openapi: 3.1.0
+info:
+  title: API Agroriego — Sectores y riegos manuales
+  description: Contrato para consultar sectores productivos monitoreados y administrar
+    registros de riego manual. La API no controla bombas, electroválvulas ni dispositivos
+    físicos. Los sectores contienen humedad simulada. Riegos persistentes en SQLite;
+    origen manual o demostracion. Si hay caudal, el volumen es duración por caudal,
+    redondeado a dos decimales (tolerancia 0,01 L); sin caudal, volumen informado
+    manualmente.
+  version: 1.1.0
+  contact:
+    name: Hernán Ruggeri
+paths:
+  /sectores:
+    get:
+      summary: Listar los sectores monitoreados
+      responses:
+        '200':
+          description: Lista de sectores monitoreados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sector'
+        '405':
+          description: Método no permitido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error interno; la operación no pudo completarse
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /sectores/{sectorId}/riegos:
+    parameters:
+    - name: sectorId
+      in: path
+      required: true
+      description: Identificador del sector
+      schema:
+        type: string
+    get:
+      summary: Listar los riegos manuales de un sector
+      responses:
+        '200':
+          description: Lista de riegos manuales del sector
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Riego'
+        '404':
+          description: El sector no existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '405':
+          description: Método no permitido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error interno; la operación no pudo completarse
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Registrar un riego manual en un sector
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RiegoInput'
+      responses:
+        '201':
+          description: Riego manual registrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Riego'
+        '400':
+          description: El cuerpo de la solicitud es inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: El sector no existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '405':
+          description: Método no permitido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error interno; la operación no pudo completarse
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: Cuerpo superior a 100 KB
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /sectores/{sectorId}/riegos/{riegoId}:
+    parameters:
+    - name: sectorId
+      in: path
+      required: true
+      description: Identificador del sector
+      schema:
+        type: string
+    - name: riegoId
+      in: path
+      required: true
+      description: Identificador del registro de riego manual
+      schema:
+        type: string
+    delete:
+      summary: Eliminar un registro de riego manual cargado por error
+      responses:
+        '204':
+          description: Registro de riego eliminado correctamente
+        '404':
+          description: El sector o el registro de riego no existen
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '405':
+          description: Método no permitido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error interno; la operación no pudo completarse
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Sector:
+      type: object
+      required:
+      - id
+      - numero
+      - cultivo
+      - humedad_actual_pct
+      - humedad_min_pct
+      - humedad_max_pct
+      - estado_humedad
+      properties:
+        id:
+          type: string
+        numero:
+          type: string
+        cultivo:
+          type: string
+        humedad_actual_pct:
+          type: integer
+          minimum: 0
+          maximum: 100
+        humedad_min_pct:
+          type: integer
+          minimum: 0
+          maximum: 100
+        humedad_max_pct:
+          type: integer
+          minimum: 0
+          maximum: 100
+        estado_humedad:
+          type: string
+          enum:
+          - seco
+          - adecuado
+          - exceso
+    RiegoInput:
+      type: object
+      additionalProperties: false
+      required:
+      - inicio
+      - duracion_minutos
+      - volumen_litros
+      properties:
+        inicio:
+          type: string
+          format: date-time
+          description: Fecha/hora con segundos y zona horaria; se normaliza a UTC.
+            Año desde 1900.
+        duracion_minutos:
+          type: integer
+          minimum: 1
+        volumen_litros:
+          type: number
+          exclusiveMinimum: 0
+          description: Con caudal, debe coincidir con duración × caudal (tolerancia
+            0,01 L). Sin caudal, volumen informado.
+        caudal_litros_minuto:
+          type: number
+          exclusiveMinimum: 0
+        observaciones:
+          type: string
+          maxLength: 300
+    Riego:
+      type: object
+      required:
+      - id
+      - sector_id
+      - inicio
+      - duracion_minutos
+      - volumen_litros
+      - origen
+      properties:
+        id:
+          type: string
+        sector_id:
+          type: string
+        inicio:
+          type: string
+          format: date-time
+        duracion_minutos:
+          type: integer
+          minimum: 1
+        volumen_litros:
+          type: number
+          exclusiveMinimum: 0
+        caudal_litros_minuto:
+          type: number
+          exclusiveMinimum: 0
+        observaciones:
+          type: string
+          maxLength: 300
+        origen:
+          type: string
+          enum:
+          - manual
+          - demostracion
+    Error:
+      type: object
+      required:
+      - codigo
+      - mensaje
+      properties:
+        codigo:
+          type: string
+        mensaje:
+          type: string
+servers:
+- url: /api
+  description: API local servida junto con el frontend

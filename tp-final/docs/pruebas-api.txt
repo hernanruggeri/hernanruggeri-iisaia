@@ -1,0 +1,21 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> hr-agroriego-iot@1.0.0 test
+> node --test tests/api.test.mjs tests/validation.test.mjs tests/persistence.test.mjs
+
+✔ GET /sectores devuelve los cuatro sectores (23.878544ms)
+✔ POST /sectores/{sectorId}/riegos crea un registro y devuelve 201 (9.566056ms)
+✔ GET /sectores/{sectorId}/riegos recupera el registro creado (4.203615ms)
+✔ POST rechaza propiedades adicionales con 400 (3.203117ms)
+✔ POST devuelve 404 cuando el sector no existe (4.075291ms)
+✔ riego conserva ID y valores tras reiniciar el proceso; DELETE también persiste (230.792441ms)
+✔ entradas inválidas se rechazan por HTTP sin escribir; contrato y métodos (73.585539ms)
+✔ volumen, filtros y total diario distinguen fecha de Buenos Aires (18.408445ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 301.054532

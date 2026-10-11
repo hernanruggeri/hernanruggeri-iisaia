@@ -1,0 +1,43 @@
+# Verificación de la versión final — 6 de octubre de 2026
+
+## Entorno
+Linux, Node v24.19.0. Instalación npm con package-lock; base de pruebas temporal. No se ejecutó Windows nativo en este entorno. La versión intermedia había sido probada por el usuario en Windows; esa comprobación no se presenta como validación de la nueva versión.
+
+## Resultados
+
+| Comprobación | Evidencia | Resultado |
+|---|---|---|
+| API y dominio | pruebas-api.txt | 8 pruebas aprobadas: consultas, creación, contrato, reinicio, entradas inválidas, volumen y fechas |
+| Persistencia real | persistence.test.mjs | Tres procesos consecutivos sobre el mismo archivo temporal; conserva ID, valores y eliminaciones; no reinserta semilla borrada |
+| Instalación limpia | prueba-instalacion-limpia.txt | Exportación de los archivos de Git, npm ci, pruebas, build y navegador |
+| Compilación | compilacion.txt | Build final exitoso; advertencia de tamaño del bundle, sin impedir ejecución |
+| Servidor integral | pruebas-integracion.txt | 1 prueba aprobada: HTML + GET + POST + consulta |
+| Compatibilidad estática heredada | pruebas-estatico.txt | 4 pruebas aprobadas; no prueba una API remota |
+| Navegador real | pruebas-navegador.txt | Registro, cálculo, recarga, filtros, cancelación/eliminación, API caída/reintento y vista móvil |
+
+La prueba de reinicio primero falló sobre el avance por pérdida del registro: ver pruebas-reinicio-antes.txt. El resultado final está incluido en pruebas-api.txt. No se afirma que todas las pruebas se escribieron antes de la implementación: la prueba previa se aplicó al problema central de persistencia.
+
+## Navegador
+Playwright sobre Chromium 153 headless, 1440×1000 y 390×844. La descarga estándar de Chromium falló en este entorno; se utilizó un ejecutable Chromium proporcionado por un paquete temporal, mediante PLAYWRIGHT_CHROMIUM_EXECUTABLE. Ese paquete no forma parte de la entrega. El usuario puede usar la instalación normal documentada en el README.
+
+La prueba detectó un desborde móvil de la tabla heredada. Se corrigió el mínimo de ancho de la columna para que el desplazamiento sea interno a la tabla. Las capturas de docs/capturas corresponden a datos de prueba, no a registros de una instalación real. La espera de recarga del script también se corrigió para contemplar el estado Cargando.
+
+## Revisión técnica
+- Consultas parametrizadas y FK; inicialización única transaccional.
+- Escritura antes del 201; eliminación sólo dentro del sector pedido; cierre de conexión.
+- Fecha con zona horaria y validación del día; normalización UTC; vista Buenos Aires.
+- Campos extra, volumen incoherente y cuerpo inválido se rechazan sin escribir. Métodos no permitidos: 405; cuerpos grandes: 413.
+- Eliminación confirmada; estado sin API no conserva una falsa fila local ni anuncia un guardado.
+- Los sensores y curvas siguen simulados; límites y origen visibles.
+- Artefactos estáticos heredados preservados; no se confunden con servidor persistente.
+- Base local, .env y node_modules excluidos de Git y del paquete de entrega.
+
+## Comprobación final en la computadora de presentación
+Desde tp-final: node --version, npm ci y npm run demo. Crear «Demo final» con 9 min y 0,8 L/min; verificar 7,2 L; detener, reiniciar y recuperar la fila. Esto confirma instalación, firewall, puertos y entorno Windows específicos. No es una función pendiente de implementación.
+
+## Límites de la evidencia
+No se evaluaron sensores físicos, despliegue público, carga multiusuario ni calidad de una fuente meteorológica real. Las pruebas no convierten los umbrales demostrativos en criterios agronómicos validados. Preparación de archivos y publicación remota son pasos distintos; consultar el estado final informado al usuario antes de enviar el enlace al docente.
+
+## Revisión previa a publicación — 11 de octubre de 2026
+
+Se repitieron `npm ci`, `npm test` (8 pruebas), `npm run build`, `npm run test:demo` (1 prueba) y `npm run test:sites` (4 pruebas): todos aprobados. La descarga estándar de Chromium falló; no se repitió la prueba de navegador en esta revisión. Se conserva la evidencia previa del 6 de octubre. Se verificaron los 50 archivos seleccionados para publicación, excluyendo presentaciones, guiones, historial empaquetado, bases locales y dependencias.

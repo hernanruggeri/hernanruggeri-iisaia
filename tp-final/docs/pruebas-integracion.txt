@@ -1,0 +1,14 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> hr-agroriego-iot@1.0.0 test:demo
+> node --test tests/demo.test.mjs
+
+✔ la demo sirve el frontend y completa el recorrido vertical (32.398133ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 126.093848

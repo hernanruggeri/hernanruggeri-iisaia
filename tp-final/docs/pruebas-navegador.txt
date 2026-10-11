@@ -1,0 +1,9 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> hr-agroriego-iot@1.0.0 test:browser
+> node scripts/test-browser.mjs
+
+PASS navegador: registro, cálculo de 7,2 L y recarga desde SQLite
+PASS navegador: filtros de sector y período
+PASS navegador: cancelación y eliminación confirmada persistente
+PASS navegador: API no disponible, escritura bloqueada y reconexión

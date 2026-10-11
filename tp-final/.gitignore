@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.env
+*.log
+__pycache__/
+*.py[cod]
+
+/data/
+*.sqlite*
+.env.*
+!.env.example
+playwright-report/
+test-results/
+
+# Material privado de preparación de la entrega
+*.ppt
+*.pptx
+/docs/*Guion*
+/docs/*guion*
+/docs/avance/presentacion-intermedia-original.md

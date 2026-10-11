@@ -1,0 +1,68 @@
+export const initialSectors = [
+  {
+    id: "s1",
+    numero: "01",
+    cultivo: "Maíz dulce",
+    humedad_actual_pct: 52,
+    humedad_min_pct: 40,
+    humedad_max_pct: 65,
+    estado_humedad: "adecuado",
+  },
+  {
+    id: "s2",
+    numero: "02",
+    cultivo: "Zapallo",
+    humedad_actual_pct: 28,
+    humedad_min_pct: 35,
+    humedad_max_pct: 60,
+    estado_humedad: "seco",
+  },
+  {
+    id: "s3",
+    numero: "03",
+    cultivo: "Arveja",
+    humedad_actual_pct: 44,
+    humedad_min_pct: 38,
+    humedad_max_pct: 58,
+    estado_humedad: "adecuado",
+  },
+  {
+    id: "s4",
+    numero: "04",
+    cultivo: "Cítricos",
+    humedad_actual_pct: 49,
+    humedad_min_pct: 42,
+    humedad_max_pct: 62,
+    estado_humedad: "adecuado",
+  },
+];
+
+export const initialIrrigations = [
+  {
+    id: "r1",
+    sector_id: "s1",
+    inicio: "2026-09-20T09:10:00-03:00",
+    duracion_minutos: 12,
+    caudal_litros_minuto: 0.8,
+    volumen_litros: 9.6,
+    observaciones: "Riego manual de demostración.",
+  },
+  {
+    id: "r2",
+    sector_id: "s3",
+    inicio: "2026-09-19T18:40:00-03:00",
+    duracion_minutos: 15,
+    caudal_litros_minuto: 0.8,
+    volumen_litros: 12,
+    observaciones: "Riego manual de demostración.",
+  },
+  {
+    id: "r3",
+    sector_id: "s4",
+    inicio: "2026-09-18T18:10:00-03:00",
+    duracion_minutos: 10,
+    caudal_litros_minuto: 0.8,
+    volumen_litros: 8,
+    observaciones: "Riego manual de demostración.",
+  },
+];
