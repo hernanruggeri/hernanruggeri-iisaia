@@ -41,3 +41,9 @@ No se evaluaron sensores físicos, despliegue público, carga multiusuario ni ca
 ## Revisión previa a publicación — 11 de octubre de 2026
 
 Se repitieron `npm ci`, `npm test` (8 pruebas), `npm run build`, `npm run test:demo` (1 prueba) y `npm run test:sites` (4 pruebas): todos aprobados. La descarga estándar de Chromium falló; no se repitió la prueba de navegador en esta revisión. Se conserva la evidencia previa del 6 de octubre. Se verificaron los 50 archivos seleccionados para publicación, excluyendo presentaciones, guiones, historial empaquetado, bases locales y dependencias.
+
+## Comprobación nativa en Windows — 11 de octubre de 2026
+
+El usuario verificó la entrega publicada en su computadora con Windows y Git Bash, Node v24.19.0 y npm 11.17.0. Ejecutó `npm ci && npm test && npm run demo`; las capturas aportadas muestran compilación y servidor integral disponibles. En el navegador registró un riego manual del Sector 02 (Zapallo), con 9 minutos, 0,8 litros por minuto y observación «Demo final windows»; el volumen calculado fue 7,20 litros. Tras detener el servidor y reiniciarlo con `npm start`, recuperó el registro en la interfaz. Esta evidencia confirma la persistencia de ese registro en la instalación Windows de presentación; complementa las pruebas automatizadas descritas arriba, sin sustituirlas.
+
+La publicación final quedó en el commit `22d7cecfd59ac1d72190f2e3a489c811a000e702`, con 50 archivos dentro de `tp-final/` y autoría de Hernán Ruggeri. No se publicaron PowerPoint, guiones, base local ni configuración privada. Las ampliaciones meteorológicas posteriores y los ajustes del tablero permanecen fuera de la entrega publicada. Esta sección documenta comprobaciones realizadas después de preparar el paquete final.
