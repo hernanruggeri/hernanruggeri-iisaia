@@ -91,3 +91,6 @@ Sin .env.weather, `npm run demo` y `npm start` usan una ubicación pública de e
 
 ## Permisos del entorno agéntico
 Configuración local en `.codex/config.toml` y `.codex/rules/agroriego.rules`. Ver [decisiones, activación y comprobaciones](docs/permisos-codex.md). Incorporada el 13/10/2026; no se atribuye a etapas anteriores. Se verificaron cinco consultas de política con Codex CLI 0.162.1, ejecutadas manualmente por el usuario. No se inició una sesión operativa del agente ni se verificó el sandbox en ejecución; la activación se documenta sólo como referencia.
+
+## Skill propia
+Se incorpora `revisar-cambio-agroriego`, un procedimiento adaptado al proyecto que responde al apartado «Al menos una skill propia». Ver [propósito, archivos y revisión documental](docs/skill-propia.md). Creada el 13/10/2026; no se activó ni ejecutó mediante un agente ni se atribuye uso durante el desarrollo previo.

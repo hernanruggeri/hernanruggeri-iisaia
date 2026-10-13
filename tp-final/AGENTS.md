@@ -33,3 +33,6 @@ Estas son instrucciones de supervisión, no bloqueos de acceso por archivo ni re
 
 ### Alcance autorizado para esta entrega documental
 No iniciar una sesión operativa de Codex ni solicitar acceso a la computadora del usuario, máquina virtual o entorno remoto para validar permisos. Las consultas de política ya realizadas se documentan con sus límites. El procedimiento de activación es sólo una referencia; no constituye autorización para ejecutarlo. La publicación se realiza manualmente por el usuario desde Git Bash.
+
+## Procedimiento reutilizable de revisión
+La skill propia está en `.agents/skills/revisar-cambio-agroriego/SKILL.md`; su propósito y estado se documentan en docs/skill-propia.md. Su creación no autoriza ejecución operativa, acceso a Windows ni publicación.
