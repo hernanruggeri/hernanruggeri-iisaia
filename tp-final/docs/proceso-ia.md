@@ -33,3 +33,6 @@ Explicar por qué el registro sobrevive al reinicio, dónde está el contrato, q
 
 ## Ampliación meteorológica — octubre de 2026
 El usuario solicitó incorporar información externa, definió una ubicación en configuración privada y comprobó la consulta desde Git Bash. Codex implementó consulta, validación, SQLite y pruebas aisladas; luego API e interfaz. La revisión con capturas detectó formato horario de 12 horas y etiquetas ambiguas: se corrigieron a 24 horas y se separaron estimaciones externas, humedad simulada y registros manuales. Se retiró lluvia simulada del gráfico y CSV y se incorporó consulta de versiones guardadas. La ampliación se mantuvo local hasta la autorización de publicación del 12 de octubre; se conserva la autoría del usuario y se excluyen PPT, guiones, coordenadas y bases privadas.
+
+### Reproducibilidad para evaluación
+Tras publicar la integración, el usuario pidió una ubicación pública de ejemplo y consulta periódica. Se agregó un modo de demostración identificado (Buenos Aires, zona del Obelisco) y se conservó prioridad de configuración privada. Se implementó un temporizador de tres horas con cancelación al cerrar y reutilización de consulta en curso. La prueba usa un temporizador controlado; no se afirma espera real de tres horas. Se documentaron pasos y mapa de archivos en recorrido-docente.md.

@@ -15,7 +15,7 @@ Tablas nuevas en data/agroriego.sqlite: weather_downloads conserva fuente, tipo 
 
 Se guardan precipitación prevista, probabilidad máxima diaria, temperatura mínima/máxima y ET0 diarios; temperatura y humedad relativa horarias. Todos proceden de modelos, no de estaciones ni sensores de la huerta. ET0 no equivale directamente al requerimiento del cultivo. Fuente: https://open-meteo.com/en/docs
 
-Versiones con series distintas se conservan; una respuesta idéntica actualiza la fecha de consulta sin duplicar valores. La huella excluye el tiempo de procesamiento del proveedor. Una falla no modifica los valores anteriores. La fecha mostrada permite reconocer datos antiguos; todavía no hay avisos automáticos, interfaz ni consultas periódicas.
+Versiones con series distintas se conservan; una respuesta idéntica actualiza la fecha de consulta sin duplicar valores. La huella excluye el tiempo de procesamiento del proveedor. Una falla no modifica los valores anteriores. La fecha mostrada permite reconocer datos antiguos; esta primera etapa se amplió después con interfaz y consultas periódicas; ver meteorologia-tablero.md.
 
 El módulo agrega tablas sin cambiar las tablas de riego ni user_version, por lo que la entrega anterior puede seguir abriendo la base. Antes de usarlo sobre una base real, detener el servidor y copiar el archivo a un respaldo privado. No publicar la base, respuestas meteorológicas con coordenadas ni .env.weather.
 

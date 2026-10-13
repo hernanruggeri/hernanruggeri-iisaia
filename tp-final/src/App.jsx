@@ -318,7 +318,7 @@ function SummaryView({ data, onNavigate, weatherData, onWeather }) {
   const drySector = data.sectors.find((sector) => sector.status === "Seco");
   const currentWeather = weatherData?.current;
   const externalValue = (v, unit) => Number.isFinite(v) ? `${v.toLocaleString('es-AR')} ${unit}` : 'Sin dato';
-  const externalOrigin = weatherData?.unavailable || weatherData?.stale || weatherData?.error ? 'Externo · revisar vigencia' : 'Externo · estimado';
+  const externalOrigin = weatherData?.unavailable || weatherData?.stale || weatherData?.error ? 'Externo · revisar vigencia' : weatherData?.mode === 'demo' ? 'Externo · demo Buenos Aires' : 'Externo · estimado';
   const weatherHour = currentWeather?.hour ? `Hora prevista: ${currentWeather.hour.slice(11)} (Buenos Aires)` : 'Sin dato para la hora actual';
   const metrics = [
     { label: "Temperatura estimada — hora actual", value: externalValue(currentWeather?.temperature, '°C'), subvalue: weatherHour, origin: externalOrigin, originTone: 'external', icon: 'temperature', tone: 'green' },

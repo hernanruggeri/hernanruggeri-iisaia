@@ -23,7 +23,7 @@ paths:
         description: Si vale 1, devuelve hasta 30 versiones recientes en versions.
       responses:
         '200':
-          description: Estado y datos meteorológicos guardados; sin coordenadas. Sin datos, daily es null o versions está vacío.
+          description: Estado y datos meteorológicos guardados; sin coordenadas. mode y locationLabel identifican demo pública o configuración privada; intervalHours indica periodicidad activa. Sin datos, daily es null o versions está vacío.
           content:
             application/json:
               schema:

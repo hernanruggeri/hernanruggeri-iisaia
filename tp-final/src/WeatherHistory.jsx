@@ -3,6 +3,7 @@ const base = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '');
 const format = value => new Date(value).toLocaleString('es-AR', {timeZone:'America/Argentina/Buenos_Aires',hourCycle:'h23'});
 const number = (v, unit) => Number.isFinite(v) ? `${v.toLocaleString('es-AR')} ${unit}` : 'Sin dato';
 export function WeatherHistory() {
+  const [location,setLocation]=useState('');
   const [versions,setVersions]=useState([]);
   const [selected,setSelected]=useState('');
   const [busy,setBusy]=useState(true);
@@ -11,7 +12,7 @@ export function WeatherHistory() {
   useEffect(()=>{
     let active=true;setBusy(true);
     fetch(`${base}/meteorologia?history=1`).then(async r=>{if(!r.ok)throw new Error();return r.json();})
-      .then(data=>{if(active){setVersions(data.versions);setSelected(data.versions[0]?.id || '');setError('');}})
+      .then(data=>{if(active){setLocation(data.locationLabel || '');setVersions(data.versions);setSelected(data.versions[0]?.id || '');setError('');}})
       .catch(()=>{if(active)setError('No se pudo consultar el historial meteorológico guardado.');})
       .finally(()=>{if(active)setBusy(false);});
     return()=>{active=false;};
@@ -21,6 +22,7 @@ export function WeatherHistory() {
     <div className="panel-heading"><div><h2 id="weather-history-title">Pronósticos meteorológicos guardados</h2>
       <p>Fuente: Open-Meteo · Hasta 30 versiones recientes. Datos previstos para la zona; no representan lluvia observada.</p></div>
       <button className="secondary-button" disabled={busy} onClick={()=>setRetry(v=>v+1)}>{busy?'Cargando…':'Recargar historial'}</button></div>
+    <p>{location}</p>
     {error && <p role="alert" className="error-message">{error}</p>}
     {!busy && versions.length===0 && <p>Sin pronósticos guardados.</p>}
     {versions.length>0 && <><label htmlFor="forecast-version">Versión guardada</label>{' '}

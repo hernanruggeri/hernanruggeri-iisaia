@@ -1,6 +1,6 @@
 # Pronóstico en el tablero local
 
-Segunda etapa: panel en Resumen y API meteorológica. El servidor consulta al iniciar si se cargó la configuración privada. El botón Actualizar pronóstico consulta y guarda antes de mostrar el resultado. No hay consulta automática cada tres horas todavía; el navegador sólo relee la API local cada cinco segundos para detectar la finalización de la consulta inicial.
+Segunda etapa: panel en Resumen y API meteorológica. El servidor consulta al iniciar si se cargó la configuración privada. El botón Actualizar pronóstico consulta y guarda antes de mostrar el resultado. Hay consulta automática cada tres horas; el navegador sólo relee la API local cada cinco segundos para detectar la finalización de la consulta inicial.
 
 En Git Bash, desde tp-final:
 
@@ -9,7 +9,7 @@ npm run build
 node.exe --env-file=.env.weather server/demo.js
 ```
 
-Abrir http://127.0.0.1:4173/hr-agroriego-iot/#resumen. npm start sigue funcionando sin cargar meteorología; para esta etapa usar el comando anterior. Ctrl+C detiene el servidor. No borrar la base.
+Abrir http://127.0.0.1:4173/hr-agroriego-iot/#resumen. npm start ahora inicia con ubicación pública de ejemplo; el comando anterior carga la configuración privada. Ctrl+C detiene el servidor. No borrar la base.
 
 API adicional (base /api):
 - GET /meteorologia: 200 con configured, updating, error, source, kind, checkedAt, stale y daily. daily es null si no hay datos. No devuelve coordenadas ni respuesta original del proveedor.

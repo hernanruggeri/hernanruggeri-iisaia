@@ -25,3 +25,20 @@ test('selecciona hora y día de Buenos Aires; datos faltantes no se sustituyen p
  const missing=weatherForNow(data,'America/Argentina/Buenos_Aires',new Date('2026-10-12T23:30:00Z'));
  assert.equal(missing.temperature,null);assert.equal(missing.precipitation,null);
 });
+
+test('demo pública al iniciar, intervalo de tres horas, cierre y precedencia privada', async () => {
+ const {weatherIntervalMs,demoWeatherConfig}=await import('../server/weather-api.js');
+ let tick,scheduledMs,cleared=false,closed=false,calls=0;
+ const handler=createWeatherHandler({demo:true,store:{latest:()=>null,close:()=>{closed=true;}},
+   fetcher:async url=>{calls++;assert.equal(url.searchParams.get('latitude'),String(demoWeatherConfig.latitude));throw new Error('offline');},
+   schedule:(cb,ms)=>{tick=cb;scheduledMs=ms;return 7;},unschedule:id=>{assert.equal(id,7);cleared=true;}});
+ await new Promise(r=>setImmediate(r));assert.equal(calls,1);assert.equal(scheduledMs,weatherIntervalMs);assert.equal(scheduledMs,10800000);
+ tick();await new Promise(r=>setImmediate(r));assert.equal(calls,2);
+ handler.close();assert.equal(cleared,true);assert.equal(closed,true);tick();assert.equal(calls,2);
+ const names=['WEATHER_PROVIDER','WEATHER_LATITUDE','WEATHER_LONGITUDE','WEATHER_TIMEZONE','WEATHER_FORECAST_DAYS'];
+ const previous=Object.fromEntries(names.map(n=>[n,process.env[n]]));
+ Object.assign(process.env,{WEATHER_PROVIDER:'open-meteo',WEATHER_LATITUDE:'-33',WEATHER_LONGITUDE:'-57',WEATHER_TIMEZONE:'America/Argentina/Buenos_Aires',WEATHER_FORECAST_DAYS:'1'});
+ try{const privateHandler=createWeatherHandler({demo:true,autoUpdate:false,store:{latest:()=>null,close:()=>{}}});
+ await serve(privateHandler,async url=>{const data=await(await fetch(url)).json();assert.equal(data.mode,'privada');assert.equal(data.locationLabel.includes('Obelisco'),false);});}
+ finally{for(const n of names){if(previous[n]===undefined)delete process.env[n];else process.env[n]=previous[n];}}
+});

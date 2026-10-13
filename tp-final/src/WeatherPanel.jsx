@@ -30,6 +30,8 @@ export function WeatherPanel({ onWeather }) {
       <p>Fuente: Open-Meteo · Estimaciones de modelos para la zona, sin mediciones de la huerta.</p></div>
       <button className="secondary-button" onClick={update} disabled={busy || weather?.updating || !weather?.configured}>
         {busy || weather?.updating ? 'Actualizando pronóstico…' : 'Actualizar pronóstico'}</button></div>
+    <p>{weather?.locationLabel || 'Ubicación meteorológica pendiente de consulta'}</p>
+    <p>{weather?.intervalHours ? 'Actualización automática cada tres horas mientras el servidor esté funcionando.' : 'Actualización automática no disponible.'}</p>
     <p>Última consulta del pronóstico: {weather?.checkedAt ? new Date(weather.checkedAt).toLocaleString('es-AR', {timeZone:'America/Argentina/Buenos_Aires', hourCycle:'h23'}) : 'Sin dato'}</p>
     {(error || weather?.error) && <p role="alert" className="error-message">{error || weather.error}</p>}
     {weather?.stale && daily && <p role="status">Pronóstico desactualizado: pasaron más de seis horas desde la consulta.</p>}

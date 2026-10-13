@@ -71,7 +71,7 @@ export function createDemoServer(options = {}) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const port = Number(process.env.DEMO_PORT || 4173);
-  const server = createDemoServer();
+  const server = createDemoServer({ weather: { demo: true } });
   for (const signal of ["SIGINT", "SIGTERM"]) process.once(signal, () => server.close());
   server.listen(port, "127.0.0.1", () => {
     console.log(`Demo integral disponible en http://127.0.0.1:${port}${basePath}#riego`);

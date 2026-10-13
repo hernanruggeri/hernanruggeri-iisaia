@@ -10,12 +10,19 @@ export function weatherForNow(data, timezone, now = new Date()) {
     humidity: hi >= 0 ? data.hourly.relative_humidity_2m[hi] : null,
     date, precipitation: di >= 0 ? data.daily.precipitation_sum[di] : null };
 }
+export const demoWeatherConfig = Object.freeze({ latitude: -34.6037, longitude: -58.3816,
+  timezone: 'America/Argentina/Buenos_Aires', days: 3 });
+export const weatherIntervalMs = 3 * 60 * 60 * 1000;
 export function createWeatherHandler(options = {}) {
-  let config, store, configurationError = '', pending = null, lastError = '', closed = false;
+  let config, store, configurationError = '', pending = null, lastError = '', closed = false, timer = null;
+  let mode = 'privada';
+  const schedule = options.schedule || setInterval;
+  const unschedule = options.unschedule || clearInterval;
   if (options.config) config = options.config;
   else if (process.env.WEATHER_PROVIDER) {
     try { config = weatherConfig(); } catch { configurationError = 'Configuración meteorológica inválida.'; }
   }
+  else if (options.demo) { config = { ...demoWeatherConfig }; mode = 'demo'; }
   if (config) store = options.store || openWeatherStore();
   const refresh = () => {
     if (!pending) pending = updateForecast(store, config, options.fetcher).then(() => { lastError = ''; })
@@ -26,12 +33,16 @@ export function createWeatherHandler(options = {}) {
   const snapshot = () => {
     const saved = store?.latest(config);
     return { configured: Boolean(config), updating: Boolean(pending), error: configurationError || lastError,
-      source: 'Open-Meteo', kind: 'pronostico', checkedAt: saved?.last_checked_at || null,
+      source: 'Open-Meteo', kind: 'pronostico', mode, locationLabel: mode === 'demo' ? 'Demostración pública — Buenos Aires (zona del Obelisco), no corresponde a la huerta' : 'Ubicación configurada en privado', intervalHours: timer ? 3 : null, checkedAt: saved?.last_checked_at || null,
       stale: !saved || Date.now() - Date.parse(saved.last_checked_at) > 6 * 3600000,
       current: config ? weatherForNow(saved?.data, config.timezone) : null,
       daily: saved?.data.daily || null };
   };
-  if (store && options.autoUpdate !== false) refresh();
+  if (store && options.autoUpdate !== false) {
+    refresh();
+    timer = schedule(() => { if (!closed) refresh(); }, weatherIntervalMs);
+    timer?.unref?.();
+  }
   const handler = async (request, response) => {
     const write = (status, body) => { response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); response.end(JSON.stringify(body)); };
     if (!['GET','POST'].includes(request.method)) { response.setHeader('Allow','GET, POST'); write(405,{mensaje:'Usar GET o POST.'}); return; }
@@ -42,10 +53,10 @@ export function createWeatherHandler(options = {}) {
       await refresh();
     }
     if (request.method === 'GET' && new URL(request.url, 'http://localhost').searchParams.get('history') === '1') {
-      write(200, { source: 'Open-Meteo', kind: 'pronostico', versions: store ? store.history(config) : [] }); return;
+      write(200, { source: 'Open-Meteo', kind: 'pronostico', mode, locationLabel: mode === 'demo' ? 'Demostración pública — Buenos Aires (zona del Obelisco), no corresponde a la huerta' : 'Ubicación configurada en privado', versions: store ? store.history(config) : [] }); return;
     }
     write(lastError && request.method === 'POST' ? 502 : 200, snapshot());
   };
-  handler.close = () => { closed = true; if (!pending) store?.close(); };
+  handler.close = () => { closed = true; if (timer !== null) { unschedule(timer); timer = null; } if (!pending) store?.close(); };
   return handler;
 }

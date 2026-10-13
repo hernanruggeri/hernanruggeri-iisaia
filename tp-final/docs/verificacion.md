@@ -52,4 +52,10 @@ La publicación final quedó en el commit `22d7cecfd59ac1d72190f2e3a489c811a000e
 
 El usuario consultó Open-Meteo desde Windows, descargó y guardó un pronóstico, y lo recuperó con `show` en un proceso nuevo sin consultar Internet. Las capturas confirmaron el panel de Resumen, el botón Actualizar pronóstico, el formato de 24 horas, las tarjetas ambientales externas y el Historial de versiones guardadas. El riego «Demo final windows» seguía disponible después de las ampliaciones. La gráfica y el CSV de muestra se limitaron a humedad simulada. Las coordenadas y respuestas originales permanecen privadas; no se incluyen capturas identificatorias nuevas en Git.
 
-La revisión para publicación del 12 de octubre ejecutó npm ci, npm test (13 pruebas), npm run build, npm run test:demo (1 prueba) y npm run test:sites (4 pruebas): todos aprobados. No se afirma una nueva ejecución automatizada de Chromium ni una comprobación móvil de esta ampliación. La descarga automática periódica y las observaciones meteorológicas siguen fuera del alcance.
+La revisión para publicación del 12 de octubre ejecutó npm ci, npm test (13 pruebas), npm run build, npm run test:demo (1 prueba) y npm run test:sites (4 pruebas): todos aprobados. No se afirma una nueva ejecución automatizada de Chromium ni una comprobación móvil de esta ampliación. En esa revisión, la descarga automática periódica y las observaciones meteorológicas seguían fuera del alcance; la sección posterior documenta la incorporación del temporizador.
+
+## Demo pública y actualización periódica — 12 de octubre
+
+Se incorporaron ubicación pública de demostración, prioridad privada y consulta cada tres horas. La prueba controlada verifica inicio, intervalo de 10.800.000 ms, repetición y cancelación; no constituye una espera de tres horas en Windows. La demostración se identifica como ajena a la huerta. Se agrega recorrido-docente.md para instalación, recorrido manual y mapa de archivos. No se realizó una nueva inspección automatizada de navegador en esta revisión.
+
+Resultado de revisión: npm test (14), test:demo (1), test:sites (4) y build aprobados: 19 pruebas. La integración HTTP real con el proveedor para el modo público se verificará en la computadora de presentación; las pruebas controladas no requieren red.

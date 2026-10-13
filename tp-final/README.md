@@ -79,8 +79,12 @@ Después de `npm run build`, crear `.env.weather` localmente con WEATHER_PROVIDE
 npm run start:weather
 ```
 
-Consulta al iniciar y con Actualizar pronóstico; aún no hay descarga automática cada tres horas. Resumen muestra temperatura/humedad estimadas de la hora local, precipitación prevista del día y última consulta. Historial separa la muestra simulada de humedad, las versiones meteorológicas guardadas y los riegos. Los datos externos son de modelos, no observaciones de estación ni mediciones de la huerta.
+Consulta al iniciar y con Actualizar pronóstico; descarga automática cada tres horas mientras el servidor esté funcionando. Resumen muestra temperatura/humedad estimadas de la hora local, precipitación prevista del día y última consulta. Historial separa la muestra simulada de humedad, las versiones meteorológicas guardadas y los riegos. Los datos externos son de modelos, no observaciones de estación ni mediciones de la huerta.
 
 `npm run weather:update` descarga y guarda; `npm run weather:show` lee la base sin Internet. Tablas weather_downloads y weather_values en el mismo archivo SQLite. Conserva versiones distintas y evita duplicar respuestas idénticas. Historial muestra hasta 30 versiones recientes; todas permanecen guardadas. Respuestas de la API pública local no incluyen coordenadas. Sin conexión conserva el último resultado con aviso y fecha. Datos faltantes no se reemplazan por simulados ni por cero.
 
 Base, respaldos y `.env.weather` excluidos de Git. La versión académica original puede consultarse en el commit `e9c0027`; la ampliación no cambia TP1 ni TP2.
+
+## Demo inmediata para evaluación
+
+Sin .env.weather, `npm run demo` y `npm start` usan una ubicación pública de ejemplo (Buenos Aires, zona del Obelisco), identificada en pantalla y ajena a la huerta. Consultan al iniciar y cada tres horas mientras el servidor está activo. Si se carga configuración privada mediante `npm run start:weather`, tiene prioridad. Ver el [recorrido completo para el docente](docs/recorrido-docente.md), incluidos comandos, comprobaciones y mapa de archivos.
