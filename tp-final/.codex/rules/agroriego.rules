@@ -1,0 +1,93 @@
+# Reglas para solicitudes de ejecución fuera del sandbox.
+# Sin allow generales: no autorizar bash, node, npm, git o gh completos.
+
+prefix_rule(
+    pattern = ["git", "push"],
+    decision = "prompt",
+    justification = "Revisar diff y pruebas antes de publicar; conservar autoría de Hernán.",
+    match = ["git push origin mejora/permisos-codex"],
+)
+
+prefix_rule(
+    pattern = ["git", "reset"],
+    decision = "forbidden",
+    justification = "No descartar trabajo con reset --hard; revisar git diff y proponer recuperación.",
+    match = ["git reset --hard HEAD"],
+)
+
+prefix_rule(
+    pattern = ["git", "clean"],
+    decision = "forbidden",
+    justification = "No borrar archivos no versionados: pueden ser bases o configuración privada.",
+    match = ["git clean -fd"],
+)
+
+prefix_rule(
+    pattern = ["git", "checkout", "--"],
+    decision = "prompt",
+    justification = "Revisar los archivos antes de descartar cambios.",
+    match = ["git checkout -- README.md"],
+)
+
+prefix_rule(
+    pattern = ["git", "restore"],
+    decision = "prompt",
+    justification = "Revisar diff y alcance antes de restaurar archivos.",
+    match = ["git restore README.md"],
+)
+
+prefix_rule(
+    pattern = ["gh", "repo", "delete"],
+    decision = "forbidden",
+    justification = "No eliminar el repositorio de la entrega.",
+    match = ["gh repo delete hernanruggeri/hernanruggeri-iisaia"],
+)
+
+prefix_rule(
+    pattern = ["gh", "pr", "merge"],
+    decision = "prompt",
+    justification = "Revisar diff, pruebas y autorización antes de integrar un PR.",
+    match = ["gh pr merge 1"],
+)
+
+prefix_rule(
+    pattern = ["git", "rebase"],
+    decision = "prompt",
+    justification = "Revisar alcance y commits antes de reescribir historial.",
+    match = ["git rebase main"],
+)
+
+prefix_rule(
+    pattern = ["git", "commit", "--amend"],
+    decision = "prompt",
+    justification = "Revisar autoría y estado publicado antes de modificar un commit.",
+    match = ["git commit --amend"],
+)
+
+prefix_rule(
+    pattern = ["git", "branch", "-D"],
+    decision = "forbidden",
+    justification = "No eliminar ramas por fuerza; comprobar integración y usar eliminación normal.",
+    match = ["git branch -D trabajo"],
+)
+
+prefix_rule(
+    pattern = ["rm"],
+    decision = "prompt",
+    justification = "Revisar rutas y datos antes de borrar; nunca usar la base habitual para pruebas.",
+    match = ["rm -rf data"],
+)
+
+prefix_rule(
+    pattern = ["powershell"],
+    decision = "prompt",
+    justification = "Revisar el script completo: un intérprete puede acceder a archivos privados.",
+    match = ["powershell -Command Get-Date"],
+)
+
+prefix_rule(
+    pattern = ["pwsh"],
+    decision = "prompt",
+    justification = "Revisar el script completo antes de conceder ejecución fuera del sandbox.",
+    match = ["pwsh -Command Get-Date"],
+)
