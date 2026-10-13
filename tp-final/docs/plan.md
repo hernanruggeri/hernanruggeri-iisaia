@@ -10,4 +10,4 @@
 
 Cada paso se cierra con su criterio de aceptación de docs/especificacion.md. Se emplea una sesión de Codex con planificación y verificación; no se afirma uso de Superpowers ni de subagentes.
 
-La planificación descrita no acredita por sí sola la selección del modo Plan de la herramienta. Ver [evidencia disponible y límites](planificacion-y-evidencia.md).
+Este archivo describe las tareas previstas. Los registros disponibles no permiten confirmar si se utilizó el modo Plan específico de Codex. Ver [evidencia disponible y límites](planificacion-y-evidencia.md).

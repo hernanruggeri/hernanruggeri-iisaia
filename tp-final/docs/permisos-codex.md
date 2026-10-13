@@ -1,7 +1,7 @@
 # Configuración de permisos de Codex
 
 ## Propósito y procedencia
-Incorporada el 13 de octubre de 2026, después del desarrollo inicial. No se presenta como configuración usada en etapas anteriores. Resuelve el punto de configuración del runtime con permisos pensados para el proyecto; no acredita por sí sola la skill propia, modo plan, ramas o defensa.
+Incorporada el 13 de octubre de 2026, después del desarrollo inicial. No se presenta como configuración usada en etapas anteriores. Se incorpora como respuesta al apartado de configuración del runtime con permisos pensados para el proyecto. La skill propia, la planificación y el historial de ramas se describen en sus documentos específicos.
 
 Se sigue la sección 13.3 de la semana 4 y la sección de permisos del curso: decidir según el costo del error, versionar la configuración y explicar sus límites. AGENTS.md contiene instrucciones para el modelo; config.toml y las reglas son mecanismos del runtime.
 

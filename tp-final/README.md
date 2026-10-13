@@ -58,7 +58,7 @@ npm run test:browser
 
 - [Especificación](docs/especificacion.md), [plan](docs/plan.md) y [arquitectura](docs/arquitectura.md).
 - [Proceso asistido por IA](docs/proceso-ia.md) y [prompts](prompts.md).
-- [Planificación y alcance de la evidencia](docs/planificacion-y-evidencia.md): planificación previa documentada; uso específico de Plan mode no acreditado.
+- [Planificación del desarrollo](docs/planificacion-y-evidencia.md): etapas, evidencia disponible y límites del registro.
 - [Verificación y revisión](docs/verificacion.md).
 - Instrucciones del agente: `AGENTS.md`, con detalle por capa; `CLAUDE.md` es compatibilidad, no evidencia de uso de Claude en esta etapa.
 
