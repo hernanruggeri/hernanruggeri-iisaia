@@ -12,7 +12,7 @@ Se sigue la sección 13.3 de la semana 4 y la sección de permisos del curso: de
 | approval_policy | on-request: pedir elevación cuando sea necesaria; no activar acceso completo ni aprobaciones automáticas universales. |
 | Red de comandos | Desactivada por defecto: instalaciones y Open-Meteo se autorizan puntualmente. No controla las herramientas de búsqueda web del host. |
 | Publicación | git push y gh pr merge con prompt al evaluar ejecución fuera del sandbox; revisar cambios y pruebas. |
-| Pérdida de trabajo | reset --hard, git clean y eliminación del repo prohibidos por los prefijos incluidos. Restauraciones requieren revisión. |
+| Pérdida de trabajo | git reset (todas sus formas cubiertas), git clean y eliminación del repo prohibidos por los prefijos incluidos. Restauraciones requieren revisión. |
 | Datos de prueba | Directorios temporales; nunca usar la base habitual para pruebas. |
 | Secretos | Sin credenciales, coordenadas, rutas personales ni lista de proyectos confiables en la configuración publicada. |
 
@@ -54,3 +54,28 @@ Se revisó la sintaxis TOML, estructura de reglas y ejemplos de coincidencia sin
 - [Curso, permisos](https://github.com/FIUBA-Posgrado-Inteligencia-Artificial/IISAIA/blob/main/semanas/04/source_material/10-permisos.md).
 - [OpenAI, configuración local](https://developers.openai.com/codex/config-basic).
 - [OpenAI, reglas y comprobación](https://developers.openai.com/codex/rules).
+
+## Matriz revisada de protección (pasos 1 a 3)
+| Elemento | Lectura | Modificación o eliminación | Publicación | Control y límite |
+|---|---|---|---|---|
+| Código y documentación | Necesaria | Dentro del alcance de la tarea y con diff | Sólo con autorización vigente | Sandbox y supervisión; no autorización universal para cualquier cambio. |
+| Historial y ramas | Consulta normal | Revisión para restaurar/rebase/amend; reset, clean y branch -D cubiertos se rechazan | push requiere revisión en el ámbito de reglas | Prefijos exactos, no análisis de todas las variantes de Git. |
+| Base de riegos y respaldos reales | Excluidos de la copia de desarrollo | No usar para pruebas ni borrar | No publicar | Separación física de la copia y AGENTS.md; el sandbox no oculta todos los archivos legibles del equipo. |
+| .env.weather y coordenadas | Excluidos; usar ejemplo público | Configuración privada fuera del trabajo del agente | No publicar | .gitignore y supervisión; .gitignore no evita lectura ni git add -f. |
+| Configuración .codex | Lectura para revisión | Cambios explícitos, revisar diff y reiniciar | Publicable sin secretos | Las rutas protegidas dependen del runtime y OS; comprobar localmente. |
+| Instalaciones y red | Sólo según tarea | Elevación puntual para instalación o consulta | No subir datos privados | Red de comandos desactivada; búsqueda web y conectores tienen controles del host. |
+
+## Revisión de las restricciones
+Se amplió el prefijo git reset a todas sus formas para no depender del orden de --hard; esto también restringe usos no destructivos, que pueden resolverse con git restore --staged tras revisar el alcance. Se añadieron revisión de rebase y amend, rechazo de eliminación forzada de ramas y revisión de rm y los intérpretes PowerShell al solicitar salida del sandbox. No se añadieron allow globales.
+
+El prompt general de git push también coincide con git push --force y --force-with-lease cuando empiezan por ese prefijo. No se promete un rechazo técnico específico para cualquier posición de esas opciones. AGENTS.md indica no forzar publicaciones; el supervisor debe rechazar la elevación correspondiente. git -C, rutas absolutas y otras variantes ilustran por qué no basta una lista de prefijos.
+
+No se instalan hooks, plugins ni clientes alternativos para simular una garantía de confidencialidad. Si se requiere impedir técnicamente la lectura de datos reales, habrá que usar aislamiento de archivos/identidad o un entorno sin esos datos y verificarlo por separado.
+
+## Estado de cierre de la preparación
+- Paso 1: elementos y acciones protegidas definidos en la matriz.
+- Paso 2: controles contrastados con la documentación oficial; limitaciones explicitadas.
+- Paso 3: configuración, 13 reglas, instrucciones y documentación preparadas y verificadas estáticamente.
+- Pendiente: comprobar versión, carga de configuración y reglas con Codex local; publicación desde Git Bash con autoría del usuario.
+
+Para la comprobación local también consultar políticas para git push --force origin main, git reset HEAD --hard, git rebase main, git commit --amend y git branch -D trabajo. Esperado: prompt, forbidden, prompt, prompt y forbidden, respectivamente. Son argumentos de codex execpolicy check, nunca órdenes a ejecutar directamente. Verificar una variante sin coincidencia (git -C . push) permite documentar el límite sin publicar nada. La consulta del archivo de reglas verifica coincidencias; no demuestra por sí sola que la sesión haya cargado ese archivo: para eso comprobar inicio, confianza y estado del runtime.

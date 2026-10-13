@@ -9,7 +9,7 @@ prefix_rule(
 )
 
 prefix_rule(
-    pattern = ["git", "reset", "--hard"],
+    pattern = ["git", "reset"],
     decision = "forbidden",
     justification = "No descartar trabajo con reset --hard; revisar git diff y proponer recuperación.",
     match = ["git reset --hard HEAD"],
@@ -48,4 +48,46 @@ prefix_rule(
     decision = "prompt",
     justification = "Revisar diff, pruebas y autorización antes de integrar un PR.",
     match = ["gh pr merge 1"],
+)
+
+prefix_rule(
+    pattern = ["git", "rebase"],
+    decision = "prompt",
+    justification = "Revisar alcance y commits antes de reescribir historial.",
+    match = ["git rebase main"],
+)
+
+prefix_rule(
+    pattern = ["git", "commit", "--amend"],
+    decision = "prompt",
+    justification = "Revisar autoría y estado publicado antes de modificar un commit.",
+    match = ["git commit --amend"],
+)
+
+prefix_rule(
+    pattern = ["git", "branch", "-D"],
+    decision = "forbidden",
+    justification = "No eliminar ramas por fuerza; comprobar integración y usar eliminación normal.",
+    match = ["git branch -D trabajo"],
+)
+
+prefix_rule(
+    pattern = ["rm"],
+    decision = "prompt",
+    justification = "Revisar rutas y datos antes de borrar; nunca usar la base habitual para pruebas.",
+    match = ["rm -rf data"],
+)
+
+prefix_rule(
+    pattern = ["powershell"],
+    decision = "prompt",
+    justification = "Revisar el script completo: un intérprete puede acceder a archivos privados.",
+    match = ["powershell -Command Get-Date"],
+)
+
+prefix_rule(
+    pattern = ["pwsh"],
+    decision = "prompt",
+    justification = "Revisar el script completo antes de conceder ejecución fuera del sandbox.",
+    match = ["pwsh -Command Get-Date"],
 )
