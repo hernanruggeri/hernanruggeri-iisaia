@@ -88,3 +88,6 @@ Base, respaldos y `.env.weather` excluidos de Git. La versión académica origin
 ## Demo inmediata para evaluación
 
 Sin .env.weather, `npm run demo` y `npm start` usan una ubicación pública de ejemplo (Buenos Aires, zona del Obelisco), identificada en pantalla y ajena a la huerta. Consultan al iniciar y cada tres horas mientras el servidor está activo. Si se carga configuración privada mediante `npm run start:weather`, tiene prioridad. Ver el [recorrido completo para el docente](docs/recorrido-docente.md), incluidos comandos, comprobaciones y mapa de archivos.
+
+## Permisos del entorno agéntico
+Configuración local en `.codex/config.toml` y `.codex/rules/agroriego.rules`. Ver [decisiones, activación y comprobaciones](docs/permisos-codex.md). Incorporada el 13/10/2026; no se atribuye a etapas anteriores.

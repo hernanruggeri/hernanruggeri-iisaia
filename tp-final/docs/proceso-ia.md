@@ -36,3 +36,6 @@ El usuario solicitó incorporar información externa, definió una ubicación en
 
 ### Reproducibilidad para evaluación
 Tras publicar la integración, el usuario pidió una ubicación pública de ejemplo y consulta periódica. Se agregó un modo de demostración identificado (Buenos Aires, zona del Obelisco) y se conservó prioridad de configuración privada. Se implementó un temporizador de tres horas con cancelación al cerrar y reutilización de consulta en curso. La prueba usa un temporizador controlado; no se afirma espera real de tres horas. Se documentaron pasos y mapa de archivos en recorrido-docente.md.
+
+## Configuración de permisos — 13/10/2026
+A solicitud del usuario se incorporó configuración local de Codex con sandbox workspace-write, aprobación on-request, red de comandos desactivada y reglas para publicación y operaciones que descartan trabajo. Se documentan alcance y verificación local pendiente en permisos-codex.md. No se presenta como configuración utilizada antes de esta incorporación.

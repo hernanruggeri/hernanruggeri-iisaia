@@ -18,3 +18,6 @@ Node 24 LTS. npm ci; npm test; npm run build; npm run test:demo; npm run test:si
 
 ## Decisiones
 Sensores siempre etiquetados como simulados. Riegos nuevos son registros manuales; semillas son demostración. Volumen estimado = duración × caudal. Sin dato meteorológico válido, mostrar Sin dato. Sin API, no mostrar guardado exitoso ni inventar registros.
+
+## Permisos del entorno agéntico
+Configuración local en `.codex/config.toml` y `.codex/rules/agroriego.rules`. Ver [decisiones, activación y comprobaciones](docs/permisos-codex.md). Incorporada el 13/10/2026; no se atribuye a etapas anteriores.

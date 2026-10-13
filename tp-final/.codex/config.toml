@@ -1,0 +1,8 @@
+# Configuración local de desarrollo; incorporada el 13/10/2026.
+# Abrir Codex desde tp-final/ y confiar en el proyecto tras revisar estos archivos.
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+# npm ci, descargas de Chromium y consultas externas requieren aprobación puntual.
+network_access = false
