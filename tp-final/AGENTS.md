@@ -30,3 +30,6 @@ Configuración local en `.codex/config.toml` y `.codex/rules/agroriego.rules`. V
 - Para cambios en .codex/, presentar el objetivo y el diff al supervisor; no reducir sandbox ni ampliar permisos como solución automática a un fallo.
 - Una elevación se limita a una orden y necesidad concretas. No solicitar permisos permanentes para intérpretes o gestores completos ni ejecutar scripts descargados sin revisión.
 Estas son instrucciones de supervisión, no bloqueos de acceso por archivo ni reglas técnicas universales.
+
+### Alcance autorizado para esta entrega documental
+No iniciar una sesión operativa de Codex ni solicitar acceso a la computadora del usuario, máquina virtual o entorno remoto para validar permisos. Las consultas de política ya realizadas se documentan con sus límites. El procedimiento de activación es sólo una referencia; no constituye autorización para ejecutarlo. La publicación se realiza manualmente por el usuario desde Git Bash.
