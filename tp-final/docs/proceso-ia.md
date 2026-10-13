@@ -18,6 +18,8 @@ El usuario definió el problema, cuatro sectores, registro manual, anonimizació
 9. Documentación, presentación y preparación de entrega. Ver verificacion.md para la evidencia final, incluidas las limitaciones del entorno.
 
 ## Qué hizo la IA
+
+La secuencia anterior documenta planificación previa. No se conserva un registro suficiente de selección del modo Plan específico de la herramienta; tampoco se atribuye una aprobación separada del plan detallado. Ver [planificación y alcance de la evidencia](planificacion-y-evidencia.md).
 Analizó requisitos, inspeccionó código, propuso diseño, escribió implementación y pruebas, ejecutó comandos y generó documentación. El entorno fue Codex con acceso al repositorio y herramientas de ejecución. No se utilizaron Superpowers ni subagentes en esta etapa. Se incluyó CLAUDE.md únicamente para reutilizar instrucciones en Claude Code si se trabaja allí más adelante.
 
 ## Correcciones relevantes

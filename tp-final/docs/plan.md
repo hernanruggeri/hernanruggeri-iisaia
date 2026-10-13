@@ -9,3 +9,5 @@
 7. Commit con identidad del usuario y publicación de tp-final en su repositorio. No enviar correos al docente.
 
 Cada paso se cierra con su criterio de aceptación de docs/especificacion.md. Se emplea una sesión de Codex con planificación y verificación; no se afirma uso de Superpowers ni de subagentes.
+
+La planificación descrita no acredita por sí sola la selección del modo Plan de la herramienta. Ver [evidencia disponible y límites](planificacion-y-evidencia.md).
