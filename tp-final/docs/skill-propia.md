@@ -1,7 +1,7 @@
 # Skill propia de AgroRiego
 
 ## Relación con la consigna
-Se incorpora revisar-cambio-agroriego como respuesta al requisito «Al menos una skill propia» de la sección 13.3 del trabajo final. El procedimiento está adaptado a la especificación, API, SQLite, interfaz y anonimización de AgroRiego; se incorpora al repositorio para su revisión y explicación en la defensa. La valoración académica corresponde al docente.
+Se incorpora revisar-cambio-agroriego como respuesta al requisito «Al menos una skill propia» de la sección 13.3 del trabajo final. El procedimiento está adaptado a la especificación, API, SQLite, interfaz y anonimización de AgroRiego; se incorpora al repositorio para su revisión y explicación en la defensa.
 
 La consigna consultada no exige expresamente ejecutar la skill ni aportar una prueba de ejecución. Se realizó revisión de estructura y contenido; no se activó ni ejecutó mediante un agente. Esta creación posterior, del 13/10/2026, no se presenta como herramienta utilizada durante el desarrollo previo ni como evidencia de modo plan.
 
