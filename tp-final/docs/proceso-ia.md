@@ -39,3 +39,6 @@ Tras publicar la integración, el usuario pidió una ubicación pública de ejem
 
 ## Configuración de permisos — 13/10/2026
 A solicitud del usuario se incorporó configuración local de Codex con sandbox workspace-write, aprobación on-request, red de comandos desactivada y reglas para publicación y operaciones que descartan trabajo. Se documentan alcance, cinco consultas locales realizadas manualmente por el usuario con CLI 0.162.1 y la decisión de no iniciar una sesión operativa ni verificar el sandbox en ejecución en permisos-codex.md. El procedimiento de activación se conserva sólo como referencia. No se presenta como configuración utilizada antes de esta incorporación.
+
+## Skill propia — 13/10/2026
+Se redactó revisar-cambio-agroriego para revisar cambios de contrato, persistencia, interfaz y anonimización mediante archivos y evidencia aportada. Se revisaron estructura y contenido; no se ejecutó la skill mediante un agente ni se reinstaló Codex CLI. Responde al apartado de skill propia de la consigna, sin atribuirle uso previo. Ver skill-propia.md.

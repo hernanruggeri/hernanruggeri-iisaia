@@ -1,0 +1,6 @@
+interface:
+  display_name: "Revisar cambio de AgroRiego"
+  short_description: "Revisar contrato, datos e interfaz con evidencia disponible"
+  default_prompt: "Usar $revisar-cambio-agroriego para revisar el diff aportado y sus evidencias, sin ejecutar comandos ni acceder a mi computadora."
+policy:
+  allow_implicit_invocation: false
