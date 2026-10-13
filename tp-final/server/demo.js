@@ -1,3 +1,4 @@
+import { createWeatherHandler } from './weather-api.js';
 import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import { createServer } from "node:http";
@@ -26,9 +27,11 @@ function sendFile(response, filePath) {
 
 export function createDemoServer(options = {}) {
   const apiHandler = createApiHandler(options.store);
+  const weatherHandler = createWeatherHandler(options.weather);
 
   const server = createServer(async (request, response) => {
     const url = new URL(request.url, "http://localhost");
+    if (url.pathname === "/api/meteorologia") { await weatherHandler(request, response); return; }
     if (url.pathname.startsWith("/api/")) {
       await apiHandler(request, response);
       return;
@@ -62,7 +65,7 @@ export function createDemoServer(options = {}) {
       response.end("Recurso no encontrado");
     }
   });
-  server.on("close", () => apiHandler.close());
+  server.on("close", () => { apiHandler.close(); weatherHandler.close(); });
   return server;
 }
 

@@ -22,4 +22,4 @@ npm run demo
 
 Abrir `http://127.0.0.1:4173/hr-agroriego-iot/`. Consultar el [README del trabajo final](tp-final/README.md) para el recorrido, las pruebas y los límites, y la [verificación](tp-final/docs/verificacion.md) para la evidencia.
 
-La entrega publicada utiliza sensores simulados y registra intervenciones manuales; no activa bombas ni electroválvulas. La integración meteorológica posterior continúa en desarrollo local y no forma parte de esta entrega. Presentaciones, guiones, bases privadas y archivos de configuración local se mantienen fuera del repositorio.
+La entrega publicada utiliza sensores simulados y registra intervenciones manuales; no activa bombas ni electroválvulas. La ampliación meteorológica permite consultar Open-Meteo y conservar pronósticos en SQLite; requiere configuración privada. Presentaciones, guiones, bases privadas y archivos de configuración local se mantienen fuera del repositorio.

@@ -253,3 +253,9 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 @media (max-width: 1180px) {
   .irrigation-layout { grid-template-columns: minmax(0, 1fr); }
 }
+
+.weather-panel { padding: 20px; margin: 22px 0; min-width: 0; }
+.weather-table-scroll { overflow-x: auto; }
+.weather-panel table { width: 100%; min-width: 650px; }
+.weather-panel th, .weather-panel td { padding: 12px; text-align: left; }
+@media (max-width: 600px) { .weather-panel .panel-heading { flex-direction: column; } }

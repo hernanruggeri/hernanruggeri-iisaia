@@ -23,3 +23,6 @@ Persistencia: SQLite guarda datos en un archivo, independiente de la memoria del
 Los umbrales son demostrativos: no se validaron agronómicamente. Registrar agua no cambia automáticamente la humedad simulada. La recomendación visual señala un umbral; la decisión y ejecución siguen siendo humanas.
 
 Cambios frente al avance: arrays → repositorio SQLite; DELETE implementado; origen de semillas explícito; historial filtrado por fecha real; volumen coherente; fallos de API visibles. El frontend estático heredado no reemplaza al servidor Node.
+
+## Meteorología opcional
+Node consulta la API HTTPS de Open-Meteo usando coordenadas de `.env.weather`, valida series/unidades y guarda la respuesta y valores normalizados en tablas nuevas del mismo SQLite. React consulta `/api/meteorologia`; sólo recibe valores y fechas, sin coordenadas. `?history=1` recupera hasta 30 versiones guardadas de la configuración vigente. POST actualiza; GET sólo lee. El módulo agrega tablas sin alterar sectores, riegos ni user_version.

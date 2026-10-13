@@ -22,7 +22,7 @@ Si Windows no encuentra `npm`, instalar Node 24 LTS y reabrir Git Bash o PowerSh
 
 ## Recorrido para comprobar la entrega
 
-1. Resumen: cuatro sectores con humedad simulada; Zapallo está debajo de su umbral demostrativo.
+1. Resumen: cuatro sectores con humedad simulada; Zapallo está debajo de su umbral demostrativo. Las tarjetas ambientales muestran estimaciones externas si se configura meteorología.
 2. Riego: seleccionar Zapallo, fecha/hora de Buenos Aires, **9 minutos**, **0,8 litros por minuto**. El volumen se calcula: **7,2 litros**. Escribir una observación y guardar.
 3. Verificar respuesta de éxito y fila nueva, etiquetada Manual. Recargar el navegador.
 4. Detener y reiniciar el servidor. El mismo registro debe seguir disponible: ya no está en memoria.
@@ -36,7 +36,7 @@ Si Windows no encuentra `npm`, instalar Node 24 LTS y reabrir Git Bash o PowerSh
 - Registros nuevos: origen Manual. Duración y caudal informados; volumen estimado. No equivalen a una medición de caudalímetro.
 - API: `GET /api/sectores`, `GET`/`POST /api/sectores/{sectorId}/riegos`, `DELETE /api/sectores/{sectorId}/riegos/{riegoId}`.
 - Contrato final: [docs/openapi.yaml](docs/openapi.yaml); amplía el TP2 sin modificar aquella entrega.
-- Fuente externa sin configurar: Sin dato. No se presentan ceros de demostración como lluvia real.
+- Open-Meteo opcional: estimaciones horarias y pronósticos diarios guardados en SQLite. Sin configuración o dato disponible: Sin dato. No equivalen a lluvia observada.
 - Configuración y dispositivos: maqueta ilustrativa. No se guarda configuración de sensores.
 
 Para respaldar: detener el servidor, copiar `data/agroriego.sqlite` a una carpeta privada y reiniciar. Para restaurar: detener, conservar una copia de la base actual y reemplazarla por el respaldo. No publicar bases con registros reales ni `.env`. `DB_PATH` en el entorno del proceso permite otra ruta. Las pruebas usan memoria o directorios temporales y nunca modifican la base habitual.
@@ -52,7 +52,7 @@ npx playwright install chromium
 npm run test:browser
 ```
 
-`npm test` verifica API, entradas inválidas y reinicio de procesos reales. `test:demo` verifica HTML servido más recorrido HTTP; `test:browser` opera la interfaz real, recarga, filtra, elimina y simula API caída. Playwright y Chromium se necesitan sólo para esta última comprobación. El test de navegador admite `PLAYWRIGHT_CHROMIUM_EXECUTABLE` para un Chromium ya instalado. Ver [docs/verificacion.md](docs/verificacion.md) para evidencia y límites del entorno.
+`npm test` verifica API, entradas inválidas y reinicio de procesos reales. `test:demo` verifica HTML servido más recorrido HTTP; `test:browser` opera la interfaz real, recarga, filtra, elimina y simula API caída. Playwright y Chromium se necesitan sólo para esta última comprobación. La prueba de navegador original corresponde al recorrido de riegos; la ampliación meteorológica fue comprobada manualmente en Windows. El test de navegador admite `PLAYWRIGHT_CHROMIUM_EXECUTABLE` para un Chromium ya instalado. Ver [docs/verificacion.md](docs/verificacion.md) para evidencia y límites del entorno.
 
 ## Documentación de la entrega
 
@@ -70,3 +70,17 @@ Versión para ejecución local, un responsable y volumen reducido. Sin autentica
 Se entrega un frontend, backend y datos persistentes, con decisiones y pruebas documentadas. El docente aclaró en clase 6 (03:03:35–03:04:54) que el flujo específico mostrado no era obligatorio: debe poder explicarse lo construido y el uso del entorno agéntico. Esta etapa usó Codex con especificación, plan, prueba previa, implementación, revisión y verificación. No se usó Superpowers ni subagentes.
 
 Fuentes: [marco del trabajo final](https://github.com/FIUBA-Posgrado-Inteligencia-Artificial/IISAIA/blob/main/semanas/04/source_material/14-trabajo-final.md); [flujo recomendado](https://github.com/FIUBA-Posgrado-Inteligencia-Artificial/IISAIA/blob/main/semanas/05/source_material/15-bajada-al-tp-final.md); notas/transcripciones clases 5 y 6 del 23 y 30 de septiembre de 2026, aportadas al proyecto; [SQLite en Node 24](https://nodejs.org/docs/latest-v24.x/api/sqlite.html).
+
+## Ampliación meteorológica — Open-Meteo
+
+Después de `npm run build`, crear `.env.weather` localmente con WEATHER_PROVIDER=open-meteo, WEATHER_LATITUDE, WEATHER_LONGITUDE, WEATHER_TIMEZONE=America/Argentina/Buenos_Aires y WEATHER_FORECAST_DAYS=3. Las coordenadas se completan en privado; no usar variables VITE para ubicación. Ver [.env.example](.env.example) y [documentación meteorológica](docs/meteorologia-tablero.md).
+
+```bash
+npm run start:weather
+```
+
+Consulta al iniciar y con Actualizar pronóstico; aún no hay descarga automática cada tres horas. Resumen muestra temperatura/humedad estimadas de la hora local, precipitación prevista del día y última consulta. Historial separa la muestra simulada de humedad, las versiones meteorológicas guardadas y los riegos. Los datos externos son de modelos, no observaciones de estación ni mediciones de la huerta.
+
+`npm run weather:update` descarga y guarda; `npm run weather:show` lee la base sin Internet. Tablas weather_downloads y weather_values en el mismo archivo SQLite. Conserva versiones distintas y evita duplicar respuestas idénticas. Historial muestra hasta 30 versiones recientes; todas permanecen guardadas. Respuestas de la API pública local no incluyen coordenadas. Sin conexión conserva el último resultado con aviso y fecha. Datos faltantes no se reemplazan por simulados ni por cero.
+
+Base, respaldos y `.env.weather` excluidos de Git. La versión académica original puede consultarse en el commit `e9c0027`; la ampliación no cambia TP1 ni TP2.

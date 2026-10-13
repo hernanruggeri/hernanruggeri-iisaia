@@ -13,9 +13,12 @@
     "test:api": "node --test tests/api.test.mjs",
     "test:demo": "node --test tests/demo.test.mjs",
     "test:sites": "node --test tests/sites-worker.test.mjs",
-    "test": "node --test tests/api.test.mjs tests/validation.test.mjs tests/persistence.test.mjs",
+    "test": "node --test tests/api.test.mjs tests/validation.test.mjs tests/persistence.test.mjs tests/weather.test.mjs tests/weather-api.test.mjs",
     "start": "node server/demo.js",
-    "test:browser": "node scripts/test-browser.mjs"
+    "test:browser": "node scripts/test-browser.mjs",
+    "start:weather": "node --env-file=.env.weather server/demo.js",
+    "weather:update": "node --env-file=.env.weather scripts/weather-local.mjs update",
+    "weather:show": "node --env-file=.env.weather scripts/weather-local.mjs show"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",

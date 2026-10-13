@@ -11,6 +11,37 @@ info:
   contact:
     name: Hernán Ruggeri
 paths:
+  /meteorologia:
+    get:
+      summary: Consultar pronóstico guardado o sus versiones
+      parameters:
+      - in: query
+        name: history
+        schema:
+          type: string
+          enum: ['1']
+        description: Si vale 1, devuelve hasta 30 versiones recientes en versions.
+      responses:
+        '200':
+          description: Estado y datos meteorológicos guardados; sin coordenadas. Sin datos, daily es null o versions está vacío.
+          content:
+            application/json:
+              schema:
+                type: object
+        '405':
+          description: Método no permitido
+    post:
+      summary: Consultar Open-Meteo y guardar el pronóstico validado
+      description: Requiere encabezado Content-Type application/json; no requiere cuerpo. Ante falla conserva los datos anteriores.
+      responses:
+        '200':
+          description: Pronóstico actualizado; configured, updating, error, source, kind, checkedAt, stale, current y daily.
+        '415':
+          description: Falta encabezado application/json
+        '503':
+          description: Meteorología sin configurar
+        '502':
+          description: Consulta o guardado fallido; devuelve el último dato disponible
   /sectores:
     get:
       summary: Listar los sectores monitoreados

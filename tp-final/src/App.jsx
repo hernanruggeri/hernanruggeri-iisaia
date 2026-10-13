@@ -1,3 +1,5 @@
+import { WeatherHistory } from './WeatherHistory.jsx';
+import { WeatherPanel } from './WeatherPanel.jsx';
 import { useEffect, useMemo, useState } from "react";
 import { estimatedVolume, buenosAiresNow, dailyLiters, filterRecords } from "./domain.mjs";
 import {
@@ -190,7 +192,7 @@ function Sidebar({ activeView, open, onNavigate, onClose }) {
   );
 }
 
-function Header({ data, onRefresh, refreshing, onMenu }) {
+function Header({ data, weatherData, onRefresh, refreshing, onMenu }) {
   return (
     <header className="topbar">
       <button type="button" className="mobile-menu" onClick={onMenu} aria-label="Abrir menú">
@@ -201,12 +203,12 @@ function Header({ data, onRefresh, refreshing, onMenu }) {
         <span><IconMapPin size={17} /> Barrio de Chacras</span>
       </div>
       <div className="topbar-actions">
-        <span className="disclosure"><IconInfoCircle size={17} /> Sensores simulados · Meteorología externa sin dato validado</span>
+        <span className="disclosure"><IconInfoCircle size={17} /> Suelo simulado · Meteorología externa estimada</span>
         <button type="button" className="primary-button" onClick={onRefresh} disabled={refreshing}>
           <IconRefresh size={20} className={refreshing ? "spin" : ""} />
           {refreshing ? "Actualizando" : "Actualizar datos"}
         </button>
-        <small>Última actualización: {formatDateTime(data?.lastUpdate)}</small>
+        <small>Consulta meteorológica: {weatherData?.checkedAt ? new Date(weatherData.checkedAt).toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', hourCycle: 'h23' }) : 'Sin dato'}</small>
       </div>
     </header>
   );
@@ -312,15 +314,18 @@ function ActivityPanel({ activities, onHistory }) {
   );
 }
 
-function SummaryView({ data, onNavigate }) {
+function SummaryView({ data, onNavigate, weatherData, onWeather }) {
   const drySector = data.sectors.find((sector) => sector.status === "Seco");
-  const weatherAvailable = data.weather.quality === "valido" && Number.isFinite(data.weather.dailyMm);
+  const currentWeather = weatherData?.current;
+  const externalValue = (v, unit) => Number.isFinite(v) ? `${v.toLocaleString('es-AR')} ${unit}` : 'Sin dato';
+  const externalOrigin = weatherData?.unavailable || weatherData?.stale || weatherData?.error ? 'Externo · revisar vigencia' : 'Externo · estimado';
+  const weatherHour = currentWeather?.hour ? `Hora prevista: ${currentWeather.hour.slice(11)} (Buenos Aires)` : 'Sin dato para la hora actual';
   const metrics = [
-    { label: "Temperatura ambiente", value: `${data.environment.temperature.toFixed(1).replace(".", ",")} °C`, origin: "Simulado", originTone: "simulated", icon: "temperature", tone: "green" },
-    { label: "Humedad ambiente", value: `${data.environment.humidity} %`, origin: "Simulado", originTone: "simulated", icon: "humidity", tone: "blue" },
-    { label: "Precipitación hoy", value: weatherAvailable ? `${data.weather.dailyMm.toFixed(1).replace(".", ",")} mm` : "Sin dato", origin: weatherAvailable ? "Externo · real" : "Externo · faltante", originTone: weatherAvailable ? "external" : "missing", icon: "rain", tone: "blue" },
+    { label: "Temperatura estimada — hora actual", value: externalValue(currentWeather?.temperature, '°C'), subvalue: weatherHour, origin: externalOrigin, originTone: 'external', icon: 'temperature', tone: 'green' },
+    { label: "Humedad estimada — hora actual", value: externalValue(currentWeather?.humidity, '%'), subvalue: weatherHour, origin: externalOrigin, originTone: 'external', icon: 'humidity', tone: 'blue' },
+    { label: "Precipitación prevista hoy", value: externalValue(currentWeather?.precipitation, 'mm'), subvalue: 'Total previsto del día · Open-Meteo', origin: externalOrigin, originTone: 'external', icon: 'rain', tone: 'blue' },
     { label: "Riego (hoy)", value: data.irrigation.active ? "Activo" : "Inactivo", subvalue: `${data.irrigation.dailyLiters.toFixed(1).replace(".", ",")} L estimados registrados`, origin: "Manual", originTone: "manual", icon: "irrigation", tone: "green" },
-    { label: "Última actualización", value: formatDateTime(data.lastUpdate), origin: "Calculado", originTone: "calculated", icon: "update", tone: "blue" },
+    { label: 'Consulta meteorológica', value: weatherData?.checkedAt ? new Date(weatherData.checkedAt).toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', hourCycle: 'h23' }) : 'Sin dato', origin: 'Open-Meteo', originTone: 'external', icon: 'update', tone: 'blue' },
   ];
 
   return (
@@ -330,6 +335,7 @@ function SummaryView({ data, onNavigate }) {
         {metrics.map((metric) => <MetricCard key={metric.label} metric={metric} />)}
       </section>
 
+      <WeatherPanel onWeather={onWeather} />
       <section className="sector-section">
         <div className="section-heading">
           <div><h2>Estado por sector</h2><p>Humedad de suelo actual, rango objetivo y estado del cultivo.</p></div>
@@ -361,8 +367,8 @@ function HistoryView({ data }) {
   const selected = data.sectors.find((item) => item.id === sector) || data.sectors[1];
 
   const exportCsv = () => {
-    const rows = ["hora,humedad_suelo_pct,precipitacion_mm,origen_dato"];
-    data.history.forEach((point) => rows.push(`${point.time},${point[sector]},${point.rain},simulado`));
+    const rows = ["hora,humedad_suelo_pct,origen_dato"];
+    data.history.forEach((point) => rows.push(`${point.time},${point[sector]},simulado`));
     const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -374,7 +380,7 @@ function HistoryView({ data }) {
 
   return (
     <>
-      <PageHeading eyebrow="HISTORIAL" title="Historial" description="Evolución temporal de las mediciones y eventos de riego." />
+      <PageHeading eyebrow="HISTORIAL" title="Historial" description="Muestra de humedad simulada, pronósticos guardados y registros de riego." />
       <section className="panel history-panel">
         <div className="history-toolbar">
           <div>
@@ -396,26 +402,25 @@ function HistoryView({ data }) {
         </div>
         <div className="history-note">El gráfico muestra una muestra simulada fija de 24 horas. El selector de período filtra los riegos de abajo.</div>
         <div className="chart-heading">
-          <div><h2>Humedad y lluvia</h2><p>{selected.crop} · valores simulados de humedad</p></div>
+          <div><h2>Humedad del suelo — muestra simulada</h2><p>{selected.crop} · valores simulados de humedad</p></div>
           <OriginChip tone="simulated">Humedad simulada</OriginChip>
         </div>
-        <div className="chart-area" aria-label="Gráfico de humedad y lluvia">
+        <div className="chart-area" aria-label="Gráfico de humedad del suelo simulada">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data.history} margin={{ top: 12, right: 14, left: -12, bottom: 0 }}>
               <CartesianGrid stroke="#28443c" strokeDasharray="3 5" vertical={false} />
               <XAxis dataKey="time" stroke="#8ca49d" tickLine={false} axisLine={false} />
               <YAxis yAxisId="humidity" domain={[0, 80]} stroke="#8ca49d" tickLine={false} axisLine={false} unit="%" />
-              <YAxis yAxisId="rain" orientation="right" unit=" mm" domain={[0, "auto"]} stroke="#58baf2" />
               <Tooltip contentStyle={{ background: "#13251f", border: "1px solid #315148", borderRadius: 10 }} />
               <Legend />
               <ReferenceLine yAxisId="humidity" y={selected.min} stroke="#eeb740" strokeDasharray="6 5" label={{ value: `Mínimo ${selected.min}%`, fill: "#eeb740", position: "insideTopRight" }} />
               <Line yAxisId="humidity" type="monotone" dataKey={sector} name="Humedad de suelo" stroke="#3ee492" strokeWidth={3} dot={false} activeDot={{ r: 5 }} />
-              <Line yAxisId="rain" type="step" dataKey="rain" name="Lluvia simulada (mm)" stroke="#58baf2" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>
-        <div className="history-note"><IconInfoCircle size={18} /> Las series de humedad y lluvia del gráfico son simuladas; la meteorología externa del resumen figura como Sin dato si no está disponible.</div>
+        <div className="history-note"><IconInfoCircle size={18} /> La humedad del suelo es una muestra simulada. Los pronósticos externos se consultan por separado; no hay mediciones de lluvia observada.</div>
       </section>
+      <WeatherHistory />
       <section className="panel records-panel"><div className="panel-heading"><h2>Riegos registrados del sector</h2></div>
         <RecordsTable records={filterRecords(data.irrigationRecords, sector, period)} sectors={data.sectors} />
       </section>
@@ -542,6 +547,7 @@ function DevicesView({ data }) {
 
 export function App() {
   const [data, setData] = useState(null);
+  const [weatherData, setWeatherData] = useState(null);
   const [activeView, setActiveView] = useState(() => window.location.hash.replace("#", "") || "resumen");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -623,8 +629,8 @@ export function App() {
     if (activeView === "historial") return <HistoryView data={data} />;
     if (activeView === "riego") return <IrrigationView data={data} onAddRecord={addRecord} onDeleteRecord={deleteRecord} apiReady={apiReady} />;
     if (activeView === "dispositivos") return <DevicesView data={data} />;
-    return <SummaryView data={data} onNavigate={navigate} />;
-  }, [activeView, data, apiReady]);
+    return <SummaryView data={data} onNavigate={navigate} weatherData={weatherData} onWeather={setWeatherData} />;
+  }, [activeView, data, apiReady, weatherData]);
 
   if (!data) return <div className="loading"><IconLeaf2 size={42} /><span>{connectionError || "Cargando HR AgroRiego…"}</span>{connectionError && <button type="button" onClick={refresh}>Reintentar conexión</button>}</div>;
 
@@ -632,7 +638,7 @@ export function App() {
     <div className="app-shell">
       <Sidebar activeView={activeView} open={sidebarOpen} onNavigate={navigate} onClose={() => setSidebarOpen(false)} />
       <div className="app-main">
-        <Header data={data} onRefresh={refresh} refreshing={refreshing} onMenu={() => setSidebarOpen(true)} />
+        <Header data={data} weatherData={weatherData} onRefresh={refresh} refreshing={refreshing} onMenu={() => setSidebarOpen(true)} />
         <main className="content">{connectionError && <div className="error-message connection-error" role="alert">{connectionError} · Los riegos no se pueden consultar ni guardar. <button type="button" className="secondary-button" onClick={refresh}>Reintentar conexión</button></div>}{content}</main>
         <footer><span>HR AgroRiego</span><span>Monitoreo experimental del suelo y el riego</span><span>Barrio de Chacras</span></footer>
       </div>

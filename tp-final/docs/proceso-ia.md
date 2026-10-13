@@ -30,3 +30,6 @@ Analizó requisitos, inspeccionó código, propuso diseño, escribió implementa
 
 ## Apropiación para la defensa
 Explicar por qué el registro sobrevive al reinicio, dónde está el contrato, qué devuelve cada endpoint, cuándo un dato es simulado, cómo se probó y qué quedó fuera del alcance. Poder cambiar un criterio con un plan y verificarlo, sin aceptar automáticamente la propuesta del modelo.
+
+## Ampliación meteorológica — octubre de 2026
+El usuario solicitó incorporar información externa, definió una ubicación en configuración privada y comprobó la consulta desde Git Bash. Codex implementó consulta, validación, SQLite y pruebas aisladas; luego API e interfaz. La revisión con capturas detectó formato horario de 12 horas y etiquetas ambiguas: se corrigieron a 24 horas y se separaron estimaciones externas, humedad simulada y registros manuales. Se retiró lluvia simulada del gráfico y CSV y se incorporó consulta de versiones guardadas. La ampliación se mantuvo local hasta la autorización de publicación del 12 de octubre; se conserva la autoría del usuario y se excluyen PPT, guiones, coordenadas y bases privadas.
